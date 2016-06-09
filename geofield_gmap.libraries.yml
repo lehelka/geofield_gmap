@@ -1,0 +1,26 @@
+geofield_gmap.gmaps:
+  remote: "https://maps.googleapis.com/maps/api/js"
+  version: 1.x
+  license:
+    name: APACHE
+    gpl-compatible: true
+  js:
+    //maps.googleapis.com/maps/api/js: { type: external }
+
+geofield_gmap.main:
+  version: 1.x
+  js:
+    js/geofield_gmap.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.ui.autocomplete
+    - core/drupal
+    - core/drupalSettings
+    - geofield_gmap/geofield_gmap.gmaps
+
+geofield_gmap.geolocation_override:
+  version: 1.x
+  js:
+    js/geofield_gmap_geolocation_override.js: {}
+  dependencies:
+    - geofield_gmap/geofield_gmap.main

@@ -1,0 +1,6 @@
+name: Geofield Gmap
+type: module
+description: Google Map widget and formatter for geofield.
+core: 8.x
+package: Other
+
