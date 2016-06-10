@@ -170,6 +170,7 @@ class GeofieldGmapWidget extends WidgetBase {
    * After-build handler for field elements in a form.
    */
   public static function afterBuild(array $element, FormStateInterface $form_state) {
+
     $element = parent::afterBuild($element, $form_state);
 
     // Attach our main js.
@@ -177,15 +178,21 @@ class GeofieldGmapWidget extends WidgetBase {
 
     $id = $element[0]['value']['#gmap_id'];
     $gmapid = 'gmap-' . $id;
-    $element[0]['value']['lat']['#prefix'] = '<div class="form-item">';
-    $element[0]['value']['lat']['#prefix'] .= '<label>' . t("Geocode address") . '</label><input size="64" id="search-' . $id . '" class="form-text form-autocomplete geofield-gmap-search" type="text"/>';
-    $element[0]['value']['lat']['#prefix'] .= '<div id="' . $gmapid . '" class="geofield-gmap-cnt"></div>';
-    $element[0]['value']['lat']['#prefix'] .= '<div class="geofield-gmap-buttons">';
-    $element[0]['value']['lat']['#prefix'] .= '<label>' . t("Drag the marker to narrow the location") . '</label>';
-    $element[0]['value']['lat']['#prefix'] .= '<button class="geofield-gmap-center" onclick="geofield_gmap_center(\'' . $gmapid . '\'); return false;">' . t('Find marker') . '</button>';
-    $element[0]['value']['lat']['#prefix'] .= '<button class="geofield-gmap-marker" onclick="geofield_gmap_marker(\'' . $gmapid . '\'); return false;">' . t('Place marker here') . '</button>';
-    $element[0]['value']['lat']['#prefix'] .= '</div>';
-    $element[0]['value']['lat']['#prefix'] .= '</div>';
+    $markup = '<div class="form-item">';
+    $markup .= '<label>' . t("Geocode address") . '</label><input size="64" id="search-' . $id . '" class="form-text form-autocomplete geofield-gmap-search" type="text"/>';
+    $markup .= '<div id="' . $gmapid . '" class="geofield-gmap-cnt"></div>';
+    $markup .= '<div class="geofield-gmap-buttons">';
+    $markup .= '<label>' . t("Drag the marker to narrow the location") . '</label>';
+    $markup .= '<button class="geofield-gmap-center" onclick="geofield_gmap_center(\'' . $gmapid . '\'); return false;">' . t('Find marker') . '</button>';
+    $markup .= '<button class="geofield-gmap-marker" onclick="geofield_gmap_marker(\'' . $gmapid . '\'); return false;">' . t('Place marker here') . '</button>';
+    $markup .= '</div>';
+    $markup .= '</div>';
+
+    array_unshift($element[0]['value'], ['gmap_markup' => [
+      '#markup' => $markup,
+      '#allowed_tags' => ['div', 'label', 'input', 'button'],
+      '#weight' => 0.0019,
+    ]]);
 
     // Attach JS settings.
     $settings = array(
@@ -209,7 +216,6 @@ class GeofieldGmapWidget extends WidgetBase {
       // Add override behavior.
       $element['#attached']['library'][] = 'geofield_gmap/geofield_gmap.geolocation_override';
     }
-
 
     return $element;
   }
