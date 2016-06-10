@@ -9,6 +9,9 @@ geofield_gmap.gmaps:
 
 geofield_gmap.main:
   version: 1.x
+  css:
+      component:
+        css/geofield_gmap.css: {}
   js:
     js/geofield_gmap.js: {}
   dependencies:
