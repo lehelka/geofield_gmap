@@ -1,0 +1,4 @@
+administer geofield_gmap:
+  title: 'Administer Geofield Gmap.'
+  description: 'Administer Geofield Gmap.'
+  restrict access: TRUE

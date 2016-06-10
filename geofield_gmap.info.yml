@@ -1,6 +1,6 @@
 name: Geofield Gmap
 type: module
-description: Google Map widget and formatter for geofield.
+description: Google Map widget for geofield. Allows to introduce the coordinates of a point by placing a marker on a map.
 core: 8.x
 package: Other
-
+configure: geofield_gmap.admin_settings
