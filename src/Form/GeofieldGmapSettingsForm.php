@@ -7,6 +7,7 @@
 
 namespace Drupal\geofield_gmap\Form;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -57,6 +58,10 @@ class GeofieldGmapSettingsForm extends ConfigFormBase {
     $this->config('geofield_gmap.settings')
       ->set('geofield_gmap_google_api_key', $form_state->getValue('geofield_gmap_google_api_key'))
       ->save();
+
+    // Invalidate the cached library info, to allow this key to be included
+    // again in the gmaps library.
+    Cache::invalidateTags(['library_info']);
 
     parent::submitForm($form, $form_state);
   }

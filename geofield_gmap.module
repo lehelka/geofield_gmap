@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Contains geofield_gmap.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function geofield_gmap_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the geofield_gmap module.
+    case 'help.page.geofield_gmap':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Allows the user to select a point in a map when introducing the coordinates into a geofield field. It also has a geocoding input widget, which allows the user to search for a postal address and then fine-tune the results by dragging the marker on the map.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function geofield_gmap_library_info_alter(&$libraries, $extension) {
+  if ($extension == 'geofield_gmap') {
+    // Add the google api key to the library_info.
+    $config = Drupal::config('geofield_gmap.settings');
+    $key = $config->get('geofield_gmap_google_api_key');
+    foreach ($libraries['geofield_gmap.gmaps']['js'] as $jsurl => $jsvalue) {
+      $jsurl_parsed = parse_url($jsurl);
+      $query_parsed = \GuzzleHttp\Psr7\parse_query($jsurl_parsed['query']);
+      // Override it, or just delete if the user removed the key.
+      if (empty($key)) {
+        unset($query_parsed['key']);
+      }
+      else {
+        $query_parsed['key'] = $key;
+      }
+      $jsurl_parsed['query'] = \GuzzleHttp\Psr7\build_query($query_parsed);
+      $new_jsurl = !empty($jsurl_parsed['scheme']) ? $jsurl_parsed['scheme'] : '';
+      $new_jsurl .= !empty($jsurl_parsed['host']) ? '//' . $jsurl_parsed['host'] : '';
+      $new_jsurl .= !empty($jsurl_parsed['port']) ? ':' . $jsurl_parsed['port'] : '';
+      $new_jsurl .= !empty($jsurl_parsed['path']) ? $jsurl_parsed['path'] : '';
+      $new_jsurl .= !empty($jsurl_parsed['query']) ? '?' . $jsurl_parsed['query'] : '';
+      $libraries['geofield_gmap.gmaps']['js'][$new_jsurl] = $jsvalue;
+    }
+  }
+}
